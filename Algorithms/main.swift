@@ -9,9 +9,12 @@
 import Foundation
 
 
+let trie = Trie()
 
-let array = [100, 113, 110, 85, 105, 102, 86, 63, 81, 101, 94, 106, 101, 79, 94, 90, 97]
+trie.insert("Hello")
+trie.insert("Hi")
+trie.insert("Worlds")
 
-let maxSubarray = findMaximumSubarray(array)
-
-print(array)
+print(trie.contains("world"))
+print(trie.contains("h"))
+print(trie.contains("r"))
