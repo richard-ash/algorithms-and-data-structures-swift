@@ -37,6 +37,7 @@
 		8BB7ADB51EB16BBA00C33F35 /* MergeSortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7ADB41EB16BBA00C33F35 /* MergeSortTests.swift */; };
 		8BB7ADB91EB16C8000C33F35 /* SortingTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7ADB81EB16C8000C33F35 /* SortingTestable.swift */; };
 		8BB7ADBB1EB16CCD00C33F35 /* BubbleSortTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7ADBA1EB16CCD00C33F35 /* BubbleSortTests.swift */; };
+		8BCCC38A1ED3636600B27941 /* BinaryTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCC3891ED3636600B27941 /* BinaryTree.swift */; };
 		8BD4BBB71EB2F0570067589D /* MaximumSubarray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD4BBB61EB2F0570067589D /* MaximumSubarray.swift */; };
 		8BD4BBBA1EB2F6FC0067589D /* MaximumSubarrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD4BBB91EB2F6FC0067589D /* MaximumSubarrayTests.swift */; };
 		8BD4BBBE1EB2F7290067589D /* MaximumSubarray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD4BBB61EB2F0570067589D /* MaximumSubarray.swift */; };
@@ -76,6 +77,7 @@
 		8BB7ADB41EB16BBA00C33F35 /* MergeSortTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MergeSortTests.swift; sourceTree = "<group>"; };
 		8BB7ADB81EB16C8000C33F35 /* SortingTestable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortingTestable.swift; sourceTree = "<group>"; };
 		8BB7ADBA1EB16CCD00C33F35 /* BubbleSortTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleSortTests.swift; sourceTree = "<group>"; };
+		8BCCC3891ED3636600B27941 /* BinaryTree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BinaryTree.swift; sourceTree = "<group>"; };
 		8BD4BBB61EB2F0570067589D /* MaximumSubarray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaximumSubarray.swift; sourceTree = "<group>"; };
 		8BD4BBB91EB2F6FC0067589D /* MaximumSubarrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaximumSubarrayTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +116,7 @@
 				8B5DD33E1E83A59B00855312 /* LinkedList.swift */,
 				8B891B0B1EAFDF4500AB24A3 /* Queue.swift */,
 				8B02145D1ECF97FC00749458 /* Trie.swift */,
+				8BCCC3891ED3636600B27941 /* BinaryTree.swift */,
 			);
 			name = "Data Structures";
 			sourceTree = "<group>";
@@ -174,7 +177,7 @@
 				8BD4BBBB1EB2F7000067589D /* PrimitivesTests */,
 				8BB7ADB31EB16BA300C33F35 /* SortingTests */,
 				8BD4BBBD1EB2F7180067589D /* Supporting Files */,
-				8B695E221ECFA37900341C8E /* TrieTests.swift */,
+				8BCCC3881ED362D900B27941 /* DataStructureTests */,
 			);
 			path = AlgorithmsUnitTests;
 			sourceTree = "<group>";
@@ -188,6 +191,14 @@
 				8BB7ADB81EB16C8000C33F35 /* SortingTestable.swift */,
 			);
 			name = SortingTests;
+			sourceTree = "<group>";
+		};
+		8BCCC3881ED362D900B27941 /* DataStructureTests */ = {
+			isa = PBXGroup;
+			children = (
+				8B695E221ECFA37900341C8E /* TrieTests.swift */,
+			);
+			name = DataStructureTests;
 			sourceTree = "<group>";
 		};
 		8BD4BBB41EB2F01D0067589D /* Primitives */ = {
@@ -333,6 +344,7 @@
 			files = (
 				8BD4BBB71EB2F0570067589D /* MaximumSubarray.swift in Sources */,
 				8B0CE1861E8B74F000F2B31D /* Number.swift in Sources */,
+				8BCCC38A1ED3636600B27941 /* BinaryTree.swift in Sources */,
 				8B78A7401EA6CCBD00CA6817 /* ManachersAlgorithm.swift in Sources */,
 				8B02145E1ECF97FC00749458 /* Trie.swift in Sources */,
 				8B891B021EAF0EF900AB24A3 /* MergeSort.swift in Sources */,
