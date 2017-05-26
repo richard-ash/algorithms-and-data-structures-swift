@@ -11,6 +11,7 @@
 		8B0CE1861E8B74F000F2B31D /* Number.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CE1851E8B74F000F2B31D /* Number.swift */; };
 		8B0CE1881E8B810200F2B31D /* InsertionSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CE1871E8B810200F2B31D /* InsertionSort.swift */; };
 		8B40F8201E9360B000C27B10 /* BubbleSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B40F81F1E9360B000C27B10 /* BubbleSort.swift */; };
+		8B5707CC1ED8D21E00879925 /* ZigZag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5707CB1ED8D21E00879925 /* ZigZag.swift */; };
 		8B5DD3381E83A58900855312 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5DD3371E83A58900855312 /* main.swift */; };
 		8B5DD33F1E83A59B00855312 /* LinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5DD33E1E83A59B00855312 /* LinkedList.swift */; };
 		8B5DD3411E83A73600855312 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5DD3401E83A73600855312 /* Matrix.swift */; };
@@ -60,6 +61,7 @@
 		8B0CE1851E8B74F000F2B31D /* Number.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Number.swift; sourceTree = "<group>"; };
 		8B0CE1871E8B810200F2B31D /* InsertionSort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsertionSort.swift; sourceTree = "<group>"; };
 		8B40F81F1E9360B000C27B10 /* BubbleSort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleSort.swift; sourceTree = "<group>"; };
+		8B5707CB1ED8D21E00879925 /* ZigZag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZigZag.swift; sourceTree = "<group>"; };
 		8B5DD3341E83A58900855312 /* Algorithms */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Algorithms; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B5DD3371E83A58900855312 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8B5DD33E1E83A59B00855312 /* LinkedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedList.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				8B78A73F1EA6CCBD00CA6817 /* ManachersAlgorithm.swift */,
+				8B5707CB1ED8D21E00879925 /* ZigZag.swift */,
 			);
 			name = String;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				8BD4BBB71EB2F0570067589D /* MaximumSubarray.swift in Sources */,
 				8B0CE1861E8B74F000F2B31D /* Number.swift in Sources */,
 				8BCCC38A1ED3636600B27941 /* BinaryTree.swift in Sources */,
+				8B5707CC1ED8D21E00879925 /* ZigZag.swift in Sources */,
 				8B78A7401EA6CCBD00CA6817 /* ManachersAlgorithm.swift in Sources */,
 				8B02145E1ECF97FC00749458 /* Trie.swift in Sources */,
 				8B891B021EAF0EF900AB24A3 /* MergeSort.swift in Sources */,

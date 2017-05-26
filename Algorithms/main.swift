@@ -8,13 +8,3 @@
 
 import Foundation
 
-
-let trie = Trie()
-
-trie.insert("Hello")
-trie.insert("Hi")
-trie.insert("Worlds")
-
-print(trie.contains("world"))
-print(trie.contains("h"))
-print(trie.contains("r"))

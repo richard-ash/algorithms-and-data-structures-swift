@@ -8,98 +8,89 @@
 
 import Foundation
 
-public struct Matrix<T: Number> {
+public struct Matrix<Element: Number> {
   
-  // MARK: - Martix Objects
+  // MARK: - Objects
   
-  public enum Index {
+  public enum IndexType {
     case row, column
   }
   
   public struct Size: Equatable {
-    let rows: Int, columns: Int
+    let rows, columns: Int
     
     public static func ==(lhs: Size, rhs: Size) -> Bool {
       return lhs.columns == rhs.columns && lhs.rows == rhs.rows
     }
   }
   
-  // MARK: - Variables
+  public struct Index: Comparable {
+    let i, j: Int
+    
+    public static func <(lhs: Index, rhs: Index) -> Bool {
+      return lhs.i < rhs.i || lhs.j < rhs.j
+    }
+    
+    public static func ==(lhs: Index, rhs: Index) -> Bool {
+      return lhs.i == rhs.i && lhs.j == rhs.j
+    }
+  }
   
-  let rows: Int, columns: Int
+  // MARK: - Properties
+  
   let size: Size
-  
-  var grid: [T]
+  var grid: [Element]
   
   var isSquare: Bool {
     return rows == columns
   }
   
-  // MARK: - Init
+  var rows: Int {
+    return size.rows
+  }
   
-  public init(rows: Int, columns: Int, initialValue: T = T.zero) {
-    self.rows = rows
-    self.columns = columns
+  var columns: Int {
+    return size.columns
+  }
+  
+  // MARK: - Initialization
+  
+  public init(rows: Int, columns: Int, initialValue: Element = Element.zero) {
     self.size = Size(rows: rows, columns: columns)
     self.grid = Array(repeating: initialValue, count: rows * columns)
   }
   
-  public init(size: Int, initialValue: T = T.zero) {
+  public init(size: Int, initialValue: Element = Element.zero) {
     self.init(rows: size, columns: size, initialValue: initialValue)
   }
   
-  public init(rows: Int, columns: Int, valueForIndex: (Int, Int) -> T) {
+  public init(rows: Int, columns: Int, valueForIndex: (Index) -> Element) {
     self.init(rows: rows, columns: columns)
-    self.forEach { (row, column) in
-      self[row, column] = valueForIndex(row, column)
-    }
+    
+    self.grid = self.indices.map(valueForIndex)
   }
   
-  public init(size: Int, valueForIndex: (Int, Int) -> T) {
+  public init(size: Int, valueForIndex: (Index) -> Element) {
     self.init(rows: size, columns: size, valueForIndex: valueForIndex)
   }
   
-  // MARK: - Private Functions
-  
-  fileprivate func indexIsValid(row: Int, column: Int) -> Bool {
-    return row >= 0 && row < rows && column >= 0 && column < columns
-  }
-  
   // MARK: - Subscript
-  
-  public subscript(row: Int, column: Int) -> T {
-    get {
-      assert(indexIsValid(row: row, column: column), "Index out of range")
-      return grid[(row * columns) + column]
-    } set {
-      assert(indexIsValid(row: row, column: column), "Index out of range")
-      grid[(row * columns) + column] = newValue
-    }
-  }
-  
-  public subscript(type: Index, value: Int) -> [T] {
+
+  public subscript(type: IndexType, value: Int) -> [Element] {
     get {
       switch type {
-      case .row:
-        assert(indexIsValid(row: value, column: 0), "Index out of range")
-        return Array(grid[(value * columns)..<(value * columns) + columns])
-      case .column:
-        assert(indexIsValid(row: 0, column: value), "Index out of range")
-        let column = (0..<rows).map { (currentRow) -> T in
-          let currentColumnIndex = currentRow * columns + value
-          return grid[currentColumnIndex]
-        }
-        return column
+      case .row:    return getRow(number: value)
+      case .column: return getColumn(number: value)
       }
     } set {
       switch type {
       case .row:
-        assert(newValue.count == columns, "fatal error: the length of the row is greater than the number of columns")
+        precondition(newValue.count == columns, "fatal error: the length of the row is greater than the number of columns")
         for (column, element) in newValue.enumerated() {
           grid[(value * columns) + column] = element
         }
       case .column:
-        assert(newValue.count == rows, "fatal error: the length of the column is greater than the number of rows")
+        precondition(newValue.count == rows, "fatal error: the length of the column is greater than the number of rows")
         for (row, element) in newValue.enumerated() {
           grid[(row * columns) + value] = element
         }
@@ -107,29 +98,51 @@ public struct Matrix<T: Number> {
     }
   }
   
-  // MARK: - Public Functions
-  
-  public func row(for columnIndex: Int) -> [T] {
-    assert(indexIsValid(row: columnIndex, column: 0), "Index out of range")
-    return Array(grid[(columnIndex * columns)..<(columnIndex * columns) + columns])
+  public subscript(row: Int, column: Int) -> Element {
+    get {
+      let index = Index(i: row, j: column)
+      return self[index]
+    } set {
+      let index = Index(i: row, j: column)
+      self[index] = newValue
+    }
   }
   
-  public func column(for rowIndex: Int) -> [T] {
-    assert(indexIsValid(row: 0, column: rowIndex), "Index out of range")
+  // MARK: - Public Methods
+  
+  public func forEach(_ index: (Index) throws -> Void) rethrows {
+    for row in 0..<rows {
+      for column in 0..<columns {
+        try index(Index(i: row, j: column))
+      }
+    }
+  }
+  
+  // MARK: - Private Methods
+  
+  fileprivate func indexIsValid(_ index: Index) -> Bool {
+    return (0..<size.rows).contains(index.i) && (0..<size.columns).contains(index.j)
+  }
+  
+  fileprivate func indexOutOfRange(_ index: Index) -> String {
+    return "Fatal Error: Index out of Range - \(index)"
+  }
+  
+  fileprivate func getRow(number i: Int) -> [Element] {
+    let index = Index(i: i, j: 0)
+    precondition(indexIsValid(index), indexOutOfRange(index))
+    return Array(grid[(i * columns)..<(i * columns) + columns])
+  }
+  
+  fileprivate func getColumn(number j: Int) -> [Element] {
+    let index = Index(i: 0, j: j)
+    precondition(indexIsValid(index), indexOutOfRange(index))
     
-    let column = (0..<rows).map { (currentRow) -> T in
-      let currentColumnIndex = currentRow * columns + rowIndex
+    let column = (0..<rows).map { (currentRow) -> Element in
+      let currentColumnIndex = currentRow * columns + j
       return grid[currentColumnIndex]
     }
     return column
-  }
-  
-  public func forEach(_ body: (Int, Int) throws -> Void) rethrows {
-    for row in 0..<rows {
-      for column in 0..<columns {
-        try body(row, column)
-      }
-    }
   }
 }
 
@@ -138,10 +151,10 @@ public struct Matrix<T: Number> {
 extension Matrix {
   public func matrixMultiply(by B: Matrix) -> Matrix {
     let A = self
-    assert(A.columns == B.rows, "Two matricies can only be matrix mulitiplied if one has dimensions mxn & the other has dimensions nxp where m, n, p are in R")
+    precondition(A.columns == B.rows, "Two matricies can only be matrix mulitiplied if one has dimensions mxn & the other has dimensions nxp where m, n, p are in R")
     
-    let C = Matrix(rows: A.rows, columns: B.columns) { (i, j) in
-      A[.row, i].dot(B[.column, j])
+    let C = Matrix(rows: A.rows, columns: B.columns) { (index) -> Element in
+      A[.row, index.i].dot(B[.column, index.j])
     }
     
     return C
@@ -153,25 +166,25 @@ extension Matrix {
 extension Matrix {
   public func strassenMatrixMultiply(by B: Matrix) -> Matrix {
     let A = self
-    assert(A.columns == B.rows, "Two matricies can only be matrix mulitiplied if one has dimensions mxn & the other has dimensions nxp where m, n, p are in R")
+    precondition(A.columns == B.rows, "Two matricies can only be matrix mulitiplied if one has dimensions mxn & the other has dimensions nxp where m, n, p are in R")
     
-    let n = max(A.rows, A.columns, B.rows, B.columns)
+    let n = Swift.max(A.rows, A.columns, B.rows, B.columns)
     let m = nextPowerOfTwo(after: n)
     
     var APrep = Matrix(size: m)
     var BPrep = Matrix(size: m)
     
-    A.forEach { (i, j) in
-      APrep[i,j] = A[i,j]
+    A.forEach { (index) in
+      APrep[index] = A[index]
     }
     
-    B.forEach { (i, j) in
-      BPrep[i,j] = B[i,j]
+    B.forEach { (index) in
+      BPrep[index] = B[index]
     }
     
     let CPrep = APrep.strassenR(by: BPrep)
-    let C = Matrix(rows: A.rows, columns: B.columns) { (i, j) in
-      return CPrep[i, j]
+    let C = Matrix(rows: A.rows, columns: B.columns) { (index) -> Element in
+      return CPrep[index]
     }
     
     return C
@@ -179,7 +192,7 @@ extension Matrix {
   
   private func strassenR(by B: Matrix) -> Matrix {
     let A = self
-    assert(A.isSquare && B.isSquare, "This function requires square matricies!")
+    precondition(A.isSquare && B.isSquare, "This function requires square matricies!")
     guard A.rows > 1 && B.rows > 1 else { return A * B }
     
     let n    = A.rows
@@ -248,35 +261,91 @@ extension Matrix {
 // Term-by-term Matrix Math
 
 extension Matrix: Addable {
-  public static func +<T: Number>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
-    assert(lhs.size == rhs.size, "To term-by-term add matricies they need to be the same size!")
+  public static func +(lhs: Matrix, rhs: Matrix) -> Matrix {
+    precondition(lhs.size == rhs.size, "To term-by-term add matricies they need to be the same size!")
     let rows = lhs.rows
     let columns = lhs.columns
     
-    return Matrix<T>(rows: rows, columns: columns) { (row, column) -> T in
-      return lhs[row, column] + rhs[row, column]
-    }
+    return Matrix(rows: rows, columns: columns, valueForIndex: { (index) -> Element in
+      return lhs[index] + rhs[index]
+    })
   }
   
-  public static func -<T: Number>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
-    assert(lhs.size == rhs.size, "To term-by-term subtract matricies they need to be the same size!")
+  public static func -(lhs: Matrix, rhs: Matrix) -> Matrix {
+    precondition(lhs.size == rhs.size, "To term-by-term subtract matricies they need to be the same size!")
     let rows = lhs.rows
     let columns = lhs.columns
     
-    return Matrix<T>(rows: rows, columns: columns) { (row, column) -> T in
-      return lhs[row, column] - rhs[row, column]
-    }
+    return Matrix(rows: rows, columns: columns, valueForIndex: { (index) -> Element in
+      return lhs[index] - rhs[index]
+    })
   }
 }
 
 extension Matrix: Multipliable {
-  public static func *<T: Number>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
-    assert(lhs.size == rhs.size, "To term-by-term multiply matricies they need to be the same size!")
+  public static func *(lhs: Matrix, rhs: Matrix) -> Matrix {
+    precondition(lhs.size == rhs.size, "To term-by-term multiply matricies they need to be the same size!")
     let rows = lhs.rows
     let columns = lhs.columns
     
-    return Matrix<T>(rows: rows, columns: columns) { (row, column) -> T in
-      return lhs[row, column] * rhs[row, column]
+    return Matrix(rows: rows, columns: columns, valueForIndex: { (index) -> Element in
+      return lhs[index] * rhs[index]
+    })
+  }
+}
+
+// MARK: - Collection Conformance
+
+extension Matrix: RandomAccessCollection, MutableCollection {
+  
+  public var startIndex: Index {
+    return Index(i: 0, j: 0)
+  }
+  
+  public var endIndex: Index {
+    return Index(i: rows, j: 0)
+  }
+  
+  public func index(after i: Index) -> Index {
+    if i.j + 1 < size.columns {
+      return Index(i: i.i, j: i.j + 1)
+    } else {
+      return Index(i: i.i + 1, j: 0)
     }
+  }
+  
+  public func index(before i: Index) -> Index {
+    if i.j > 0 {
+      return Index(i: i.i, j: i.j - 1)
+    } else {
+      return Index(i: i.i - 1, j: size.columns - 1)
+    }
+  }
+  
+  public subscript(index: Index) -> Element {
+    get {
+      precondition(indexIsValid(index), indexOutOfRange(index))
+      return grid[(index.i * columns) + index.j]
+    } set {
+      precondition(indexIsValid(index), indexOutOfRange(index))
+      grid[(index.i * columns) + index.j] = newValue
+    }
+  }
+}
+
+// MARK: - Custom String Convertible
+
+extension Matrix: CustomStringConvertible {
+  public var description: String {
+    var returnString = ""
+    
+    for i in 0..<rows {
+      let row = self.getRow(number: i).map{ String(describing: $0) }.joined(separator: ", ")
+      returnString += "| "
+      returnString.append(row)
+      returnString += " |\n"
+    }
+    
+    return returnString
   }
 }
