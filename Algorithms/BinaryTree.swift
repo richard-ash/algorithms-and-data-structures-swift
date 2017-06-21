@@ -8,18 +8,6 @@
 
 import Foundation
 
-extension Comparable where Self: Equatable {
-  func compare(to other: Self) -> ComparisonResult {
-    if self < other {
-      return .orderedAscending
-    } else if self > other {
-      return .orderedDescending
-    } else {
-      return .orderedSame
-    }
-  }
-}
-
 class BinaryTree {
   
   class Node {
@@ -27,13 +15,13 @@ class BinaryTree {
     // MARK: - Properties
     
     let value: Int
-    var parent: Node?
+    weak var parent: Node?
     var left: Node?
     var right: Node?
     
     // MARK: - Private Proerties
     
-    private var size: Int
+    var size: Int
     
     // MARK: - Initialization
     
@@ -78,66 +66,6 @@ class BinaryTree {
       }
       size += 1
     }
-    
-    func remove(_ value: Int) -> Node? {
-      size -= 1
-      switch self.value.compare(to: value) {
-      case .orderedAscending:
-        return right?.remove(value)
-      case .orderedDescending:
-        return left?.remove(value)
-      case .orderedSame:
-        if let nextSmallest = self.nextSmallest() {
-          nextSmallest.parent = parent
-          nextSmallest.left = left
-          nextSmallest.right = right
-          
-          parent?.rewire(from: value, to: nextSmallest)
-        } else if let nextLargest = self.nextLargest() {
-          nextLargest.parent = parent
-          nextLargest.left = left
-          nextLargest.right = right
-          
-          parent?.rewire(from: value, to: nextLargest)
-        } else {
-          parent?.rewire(from: value, to: nil)
-        }
-        
-        return self
-      }
-    }
-    
-    func rewire(from value: Int, to other: Node?) {
-      if left?.value == value {
-        left = other
-      } else if right?.value == value {
-        right = other
-      }
-    }
-    
-    func maximum(from node: Node?) -> Node? {
-      var current = node
-      while let right = node?.right {
-        current = right
-      }
-      return current
-    }
-    
-    func minimum(from node: Node?) -> Node? {
-      var current = node
-      while let left = node?.left {
-        current = left
-      }
-      return current
-    }
-    
-    func nextSmallest() -> Node? {
-      return maximum(from: left)
-    }
-    
-    func nextLargest() -> Node? {
-      return minimum(from: right)
-    }
   }
   
   // MARK: - Properties
@@ -148,12 +76,13 @@ class BinaryTree {
   // MARK: - Methods
   
   func insert(_ value: Int) {
+    size += 1
+    
     if let root = root {
       root.insert(value)
     } else {
       root = Node(value: value)
     }
-    size += 1
   }
   
   func remove(_ value: Int) -> Node? {
@@ -162,5 +91,42 @@ class BinaryTree {
   
   func find(_ value: Int) -> Node? {
     return root?.find(value)
+  }
+}
+
+// Mark: - Traversal Methods
+
+extension BinaryTree {
+  func inOrderTraversalFromRoot(visit: (Node) -> Void) {
+    inOrderTraversal(from: root, visit: visit)
+  }
+  
+  func inOrderTraversal(from node: Node?, visit: (Node) -> Void) {
+    guard let node = node else { return }
+    inOrderTraversal(from: node.left, visit: visit)
+    visit(node)
+    inOrderTraversal(from: node.right, visit: visit)
+  }
+  
+  func preOrderTraversalFromRoot(visit: (Node) -> Void) {
+    preOrderTraversal(from: root, visit: visit)
+  }
+  
+  func preOrderTraversal(from node: Node?, visit: (Node) -> Void) {
+    guard let node = node else { return }
+    visit(node)
+    preOrderTraversal(from: node.left, visit: visit)
+    preOrderTraversal(from: node.right, visit: visit)
+  }
+  
+  func postOtderTraversalFromRoot(visit: (Node) -> Void) {
+    postOrderTraversal(from: root, visit: visit)
+  }
+  
+  func postOrderTraversal(from node: Node? , visit: (Node) -> Void) {
+    guard let node = node else { return }
+    postOrderTraversal(from: node.left, visit: visit)
+    postOrderTraversal(from: node.right, visit: visit)
+    visit(node)
   }
 }
