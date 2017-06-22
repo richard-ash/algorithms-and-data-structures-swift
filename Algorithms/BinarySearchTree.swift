@@ -1,5 +1,5 @@
 //
-//  BinaryTree.swift
+//  BinarySearchTree.swift
 //  Algorithms
 //
 //  Created by Richard Ash on 5/22/17.
@@ -8,26 +8,23 @@
 
 import Foundation
 
-class BinaryTree {
+class BinarySearchTree {
   
   class Node {
     
     // MARK: - Properties
     
     let value: Int
+    
     weak var parent: Node?
     var left: Node?
     var right: Node?
-    
-    // MARK: - Private Proerties
-    
-    var size: Int
+    var size = 1
     
     // MARK: - Initialization
     
     init(value: Int) {
       self.value = value
-      self.size = 1
     }
     
     // MARK: -  Methods
@@ -35,54 +32,30 @@ class BinaryTree {
     func nodeSize() -> Int {
       return self.size
     }
-    
-    func find(_ value: Int) -> Node? {
-      switch self.value.compare(to: value) {
-      case .orderedAscending:
-        return right?.find(value)
-      case .orderedDescending:
-        return left?.find(value)
-      case .orderedSame:
-        return self
-      }
-    }
-    
-    func insert(_ value: Int) {
-      switch self.value.compare(to: value) {
-      case .orderedAscending:
-        if let right = right {
-          right.insert(value)
-        } else {
-          right = Node(value: value)
-          right?.parent = self
-        }
-      case .orderedDescending, .orderedSame:
-        if let left = left {
-          left.insert(value)
-        } else {
-          left = Node(value: value)
-          left?.parent = self
-        }
-      }
-      size += 1
-    }
   }
   
   // MARK: - Properties
   
   var root: Node?
-  var size = 0
+  
+  var size: Int? {
+    return root?.nodeSize()
+  }
   
   // MARK: - Methods
   
-  func insert(_ value: Int) {
-    size += 1
-    
-    if let root = root {
-      root.insert(value)
-    } else {
-      root = Node(value: value)
+  func insert(_ values: Int...) {
+    insert(values)
+  }
+  
+  func insert(_ array: [Int]) {
+    for element in array {
+      insert(element)
     }
+  }
+  
+  func insert(_ value: Int) {
+    root = BinarySearchTree.insertValue(value, at: root)
   }
   
   func remove(_ value: Int) -> Node? {
@@ -92,11 +65,24 @@ class BinaryTree {
   func find(_ value: Int) -> Node? {
     return root?.find(value)
   }
+  
+  // MARK: - Static Methods
+  
+  static func insertValue(_ value: Int, at node: BinarySearchTree.Node?) -> BinarySearchTree.Node {
+    if let node = node {
+      node.insert(value)
+      return node
+    } else {
+      let newNode = BinarySearchTree.Node(value: value)
+      node?.parent = newNode
+      return newNode
+    }
+  }
 }
 
 // Mark: - Traversal Methods
 
-extension BinaryTree {
+extension BinarySearchTree {
   func inOrderTraversalFromRoot(visit: (Node) -> Void) {
     inOrderTraversal(from: root, visit: visit)
   }
