@@ -64,9 +64,7 @@ class BinarySearchTreeTests: XCTestCase {
   }
   
   func testRemoveReturnsNilWhenNodeDoesntExist() {
-    binarySearchTree.insert(10)
-    binarySearchTree.insert(15)
-    binarySearchTree.insert(20)
+    binarySearchTree.insert([10, 15, 20])
     
     let removed = binarySearchTree.remove(1)
     XCTAssertNil(removed)

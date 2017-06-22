@@ -38,8 +38,8 @@ class BinarySearchTree {
   
   var root: Node?
   
-  var size: Int? {
-    return root?.nodeSize()
+  var size: Int {
+    return root?.nodeSize() ?? 0
   }
   
   // MARK: - Methods
